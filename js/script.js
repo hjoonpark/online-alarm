@@ -136,11 +136,11 @@ function colorSelection(idx) {
     
 }
 function step() {
-    const dt = Date.now() - nextTime;
-    if (dt > interval) {
-        // unexpected
-        console.log("unexpected time error!");
-    }
+    // const dt = Date.now() - nextTime;
+    // if (dt > interval) {
+    //     // unexpected
+    //     console.log("unexpected time error!");
+    // }
     timerData['repeat'] = repeatChb.checked;
     timerData['started'] = true;
     const idx = timerData['currentIndex'];
@@ -176,7 +176,7 @@ function step() {
     }
     nextTime += interval;
     colorSelection(idx);
-    counter = window.setTimeout(step, Math.max(0, interval-dt));
+    counter = window.setTimeout(step, Math.max(0, interval));
 }
 startBtn.onclick = startTimer;
 stopBtn.onclick = stopTimer;
