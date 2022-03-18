@@ -259,37 +259,6 @@ function convertHMS(value) {
 // ------------------------------------------------------------------------
 soundsSelect.addEventListener('change', loadAndPlaySound);
 async function loadSounds() {
-    const url = 'https://api.github.com/repos/hjoonpark/OnlineAlarm/git/trees/master';
-    directory = directory.split('/').filter(Boolean);
-    const dir = await directory.reduce(async (acc, dir) => {
-        const { url } = await acc;
-        const list = await fetch(url).then(res => res.json());
-        return list.tree.find(node => node.path === dir);
-    }, { url });
-    if (dir) {
-        const list = await fetch(dir.url).then(res => res.json());
-        return list.tree.map(node => node.path);
-    }
-
-    // (async () => {
-    //     const response = await fetch('https://api.github.com/repos/hjoonpark/OnlineAlarm/git/trees/master');
-    //     const data = await response.json();
-
-    //     for (let i = 0; i < data.length; i++) {
-    //         fname = data[i].split('.')[0].split('-').join(" ");
-    //         fname = capitalizeFirstLetter(fname);
-            
-    //         let option = document.createElement("option");
-    //         option.text = fname;
-    //         fullPath = './sounds/' + data[i];
-    //         option.value = fullPath;
-    //         soundsSelect.add(option);
-    //     }
-    //     const fPath = soundsSelect[0].value;
-    //     audio = new Audio(fPath);
-    // })()
-
-
     // $.getJSON('./sounds', data => {
     //     for (let i = 0; i < data.length; i++) {
     //         fname = data[i].split('.')[0].split('-').join(" ");
@@ -302,6 +271,51 @@ async function loadSounds() {
     //         soundsSelect.add(option);
     //     }
     // });
+    data = [
+        "doorbell-single-press.wav",
+        "alarm-tone.wav",
+        "arabian-mystery-harp.wav",
+        "arcade-magic.wav",
+        "arcade-retro-game-over.wav",
+        "bell-notification.wav",
+        "classic-short-alarm.wav",
+        "clear-announce.wav",
+        "clock.wav",
+        "coin-win-notification.wav",
+        "correct-answer-reward.wav",
+        "elevator.wav",
+        "female-astonished-gasp.wav",
+        "game-reveal.wav",
+        "happy-bells.wav",
+        "interface-option-select.wav",
+        "little-cute-kiss.wav",
+        "magic-marimba.wav",
+        "magic-notification-ring.wav",
+        "martial-arts-fast-punch.wav",
+        "musical-alert.wav",
+        "musical-reveal.wav",
+        "positive-notification.wav",
+        "retro-game-notification.wav",
+        "sci-fi-reject.wav",
+        "sick-man-sneeze.wav",
+        "software-interface-back.wav",
+        "software-interface-remove.wav",
+        "software-interface-start.wav",
+        "tropical-forest-bird-chirp.wav",
+        "trumpet-fanfare.wav",
+        "wild-lion-animal-roar.wav",
+        "wrong-answer-fail.wav",
+    ].sort();
+    for (let i = 0; i < data.length; i++) {
+        fname = data[i].split('.')[0].split('-').join(" ");
+        fname = capitalizeFirstLetter(fname);
+        
+        let option = document.createElement("option");
+        option.text = fname;
+        fullPath = './sounds/' + data[i];
+        option.value = fullPath;
+        soundsSelect.add(option);
+    }
 }
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
