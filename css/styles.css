@@ -1,5 +1,6 @@
 html, body {
     height: 100%;
+    background-color: black;
 }
 html {
     display: table;
@@ -17,10 +18,11 @@ input#input-min, input#input-sec {
 }
 
 .container {
+    margin-top: 10%;
     padding-top: 10px;
     text-align: center;
     width: 600px;
-    background-color: lightgray;
+    background-color: lightblue;
     padding-bottom: 10px;
 }
 
