@@ -154,6 +154,9 @@ function step() {
     if (secLeft == 0) {
         // timer finished
         playSound();
+        let totalTimeStr = convertHMS(timers[idx].value);
+        sendNotification(totalTimeStr + " has finished!");
+
         if (idx == timers.length - 1) {
             // this was the last one
             if (timerData['repeat']) {
@@ -316,6 +319,9 @@ function loadSounds() {
         option.value = fullPath;
         soundsSelect.add(option);
     }
+
+    const fPath = soundsSelect[0].value;
+    audio = new Audio(fPath);
 }
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -335,4 +341,20 @@ function playSound() {
     audio.pause();
     audio.currentTime = 0;
     audio.play();
+}
+function sendNotification(txt){
+    if (window.Notification && Notification.permission === "granted") {
+        var i = 0;
+        // Using an interval cause some browsers (including Firefox) are blocking notifications if there are too much in a certain time.
+        // Thanks to the tag, we should only see the "Hi! 9" notification
+        var n = new Notification(txt);
+    } else if (window.Notification && Notification.permission !== "denied") {
+        Notification.requestPermission(function (status) {
+            // If the user said okay
+            if (status === "granted") {
+                var i = 0;
+                var n = new Notification(txt);
+            }
+        });
+    }
 }
