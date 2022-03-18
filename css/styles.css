@@ -23,7 +23,7 @@ input#input-min, input#input-sec {
     text-align: center;
     width: 600px;
     background-color: lightblue;
-    padding-bottom: 10px;
+    padding-bottom: 10%;
 }
 
 .row {

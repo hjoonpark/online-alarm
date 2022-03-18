@@ -258,7 +258,7 @@ function convertHMS(value) {
 // sounds
 // ------------------------------------------------------------------------
 soundsSelect.addEventListener('change', loadAndPlaySound);
-async function loadSounds() {
+function loadSounds() {
     // $.getJSON('./sounds', data => {
     //     for (let i = 0; i < data.length; i++) {
     //         fname = data[i].split('.')[0].split('-').join(" ");
