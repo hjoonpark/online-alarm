@@ -333,9 +333,7 @@ function loadAndPlaySound() {
         const fPath = soundsSelect[idx].value;
         audio = new Audio(fPath);
     }
-    if (timerData['started'] == false) {
-        playSound();
-    }
+    playSound();
 }
 function playSound() {
     audio.pause();
