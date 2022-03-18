@@ -1,0 +1,92 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>A Basic HTML5 Template</title>
+    <meta name="description" content="A simple HTML5 Template for new projects.">
+    <meta name="author" content="SitePoint">
+
+    <meta property="og:title" content="A Basic HTML5 Template">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.sitepoint.com/a-basic-html5-template/">
+    <meta property="og:description" content="A simple HTML5 Template for new projects.">
+    <meta property="og:image" content="image.png">
+
+    <link rel="icon" href="/favicon.ico">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/timer.css">
+
+</head>
+
+<body>
+    <div class="container">
+        <!--         
+        <div class="row">
+            <div class="base-timer">
+                <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <g class="base-timer__circle">
+                    <circle class="base-timer__path-elapsed" cx="50" cy="50" r="45"></circle>
+                    <path
+                    id="base-timer-path-remaining"
+                    stroke-dasharray="440"
+                    class="base-timer__path-remaining ${remainingPathColor}"
+                    d="
+                        M 50, 50
+                        m -45, 0
+                        a 45,45 0 1,0 90,0
+                        a 45,45 0 1,0 -90,0
+                    "
+                    ></path>
+                </g>
+                </svg>
+                <span id="base-timer-label" class="base-timer__label"></span>
+            </div>
+        </div> -->
+        <div class="row status">
+            <input type="text" id="status" value="00:00:00">
+        </div>
+        <div class="row">
+            <form style="display: inline;">
+                <input type="text" id="input-min" name="min" />
+                <label for="input-min">min</label>
+                <input type="text" id="input-sec" name="sec" />
+                <label for="input-min">sec</label>
+            </form>
+            <button id="add">Add</button>
+        </div>
+
+        <div class="row">
+            <select id="timers" name="timers" multiple>
+            </select> 
+        </div>
+        <div class="row">
+            <button style="width:20%;" id="delete-single">Delete selected</button>
+            <button style="width:20%;" id="delete-all">Delete all</button>
+        </div>
+        <div class="row">
+            <label for="repeat">Repeat</label>
+            <input type="checkbox" id="repeat" name="repeat">
+        </div>
+        <div class="row">
+            <button id="start">Start</button>
+            <button id="stop" disabled>Stop</button>
+        </div>
+        <div class="row" style="display: none;">
+            <button id="resume" disabled>Resume</button>
+            <button id="pause" disabled>Pause</button>
+        </div>
+        <div class="row">
+            <span>Sounds:</span><br>
+            <select id="sounds">
+            </select>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
