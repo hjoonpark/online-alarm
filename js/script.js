@@ -1,54 +1,3 @@
-// window.addEventListener('load', function () {
-//     let src = 'sound/1.wav';
-//     var button = document.getElementsByTagName('button')[0];
-//     if (window.self !== window.top) {
-//         // Ensure that if our document is in a frame, we get the user
-//         // to first open it in its own tab or window. Otherwise, it
-//         // won't be able to request permission to send notifications.
-//         button.textContent = "View live result of the example code above";
-//         button.addEventListener('click', () => window.open(location.href));
-//         return;
-//     }
-//     button.addEventListener('click', function () {
-//         // If the user agreed to get notified
-//         // Let's try to send ten notifications
-//         if (window.Notification && Notification.permission === "granted") {
-//             var i = 0;
-//             // Using an interval cause some browsers (including Firefox) are blocking notifications if there are too much in a certain time.
-//             // Thanks to the tag, we should only see the "Hi! 9" notification
-//             var n = new Notification("2 Hi! " + i, {tag: 'soManyNotification'});
-//             var interval = window.setInterval(function () {
-//                 // Thanks to the tag, we should only see the "Hi! 9" notification
-//                 playSound(src);
-//                 if (i++ == 9) {
-//                     window.clearInterval(interval);
-//                 }
-//             }, 1000);
-//     }
-//       // If the user hasn't told if they want to be notified or not
-//       // Note: because of Chrome, we are not sure the permission property
-//       // is set, therefore it's unsafe to check for the "default" value.
-//     else if (window.Notification && Notification.permission !== "denied") {
-//         Notification.requestPermission(function (status) {
-//             // If the user said okay
-//             if (status === "granted") {
-//             var i = 0;
-//             var n = new Notification("1 Hi! " + i, {tag: 'soManyNotification'});
-//             playSound(src);
-//         }
-//           // Otherwise, we can fallback to a regular modal alert
-//         else {
-//             alert("Notification denied from your web browser settings");
-//         }
-//         });
-//     }
-//     // If the user refuses to get notified
-//     else {
-//         // We can fallback to a regular modal alert
-//         alert("Notification denied from your web browser settings");
-//     }
-//     });
-// });
 let inputMin = document.getElementById("input-min");
 let inputSec = document.getElementById("input-sec");
 let deleteSingle = document.getElementById("delete-single");
@@ -67,7 +16,7 @@ var audio = null;
 
 const interval = 1000;
 var timerData = {currentIndex: -1, secLeft: 0, repeat: false, started: false};
-var counter = null;
+// var counter = null;
 
 window.onload = function(){
     loadSounds();
@@ -89,7 +38,8 @@ function pauseTimer() {
     resumeBtn.disabled = false;
     pauseBtn.disabled = true;
     timerData['started'] = false;
-    window.clearTimeout(counter);
+    // window.clearTimeout(counter);
+    timerWorker.postMessage('pause');
 }
 function stopTimer() {
     startBtn.disabled = false;
@@ -101,7 +51,16 @@ function stopTimer() {
     timerData['started'] = false;
     colorSelection(-1);
     displayStatus('00:00:00');
-    window.clearTimeout(counter);
+    // window.clearTimeout(counter);
+    timerWorker.postMessage('pause');
+}
+timerWorker = new Worker('js/timer.js');
+timerWorker.onmessage = function(e) {
+    switch(e.data) {
+        case 'step':
+            step(false);
+            break;
+    }
 }
 function startTimer() {
     var totalSecs = [];
@@ -119,8 +78,9 @@ function startTimer() {
         // start timer
         setCurrentTimer(0);
 
-        nextTime = Date.now();
-        counter = window.setTimeout(step, 0);
+        startTime = Date.now();
+        step(true);
+        timerWorker.postMessage('stepEvenInactive');
     }
 }
 function colorSelection(idx) {
@@ -135,48 +95,47 @@ function colorSelection(idx) {
     }
     
 }
-function step() {
-    // const dt = Date.now() - nextTime;
-    // if (dt > interval) {
-    //     // unexpected
-    //     console.log("unexpected time error!");
-    // }
-    timerData['repeat'] = repeatChb.checked;
-    timerData['started'] = true;
-    const idx = timerData['currentIndex'];
-    const secLeft = timerData['secLeft'];
-    const nextSecLeft = secLeft-1;
+const errMargin = 9; // ms
+function step(isInitial) {
+    const elapsedTime = Date.now() - startTime;
+    if (isInitial || (interval-errMargin <= elapsedTime && elapsedTime <= interval+errMargin)) {
+        startTime = Date.now();
 
-    let timeStr = convertHMS(secLeft);
-    displayStatus(timeStr);
-    colorSelection(-1);
+        timerData['repeat'] = repeatChb.checked;
+        timerData['started'] = true;
+        const idx = timerData['currentIndex'];
+        const secLeft = timerData['secLeft'];
+        const nextSecLeft = secLeft-1;
 
-    if (secLeft == 0) {
-        // timer finished
-        playSound();
-        let totalTimeStr = convertHMS(timers[idx].value);
-        sendNotification(totalTimeStr + " has finished!");
+        let timeStr = convertHMS(secLeft);
+        displayStatus(timeStr);
+        colorSelection(-1);
 
-        if (idx == timers.length - 1) {
-            // this was the last one
-            if (timerData['repeat']) {
-                // start from 0
-                setCurrentTimer(0);
+        if (secLeft == 0) {
+            // timer finished
+            playSound();
+            let totalTimeStr = convertHMS(timers[idx].value);
+            sendNotification(totalTimeStr + " has finished!");
+
+            if (idx == timers.length - 1) {
+                // this was the last one
+                if (timerData['repeat']) {
+                    // start from 0
+                    setCurrentTimer(0);
+                } else {
+                    // terminate
+                    stopTimer();
+                    return;
+                }
             } else {
-                // terminate
-                stopTimer();
-                return;
+                // move to next timer
+                setCurrentTimer(idx + 1);
             }
         } else {
-            // move to next timer
-            setCurrentTimer(idx + 1);
+            timerData['secLeft'] = nextSecLeft;
         }
-    } else {
-        timerData['secLeft'] = nextSecLeft;
+        colorSelection(idx);
     }
-    nextTime += interval;
-    colorSelection(idx);
-    counter = window.setTimeout(step, Math.max(0, interval));
 }
 startBtn.onclick = startTimer;
 stopBtn.onclick = stopTimer;
