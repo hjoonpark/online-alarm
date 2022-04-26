@@ -98,7 +98,7 @@ function colorSelection(idx) {
 const errMargin = 9; // ms
 function step(isInitial) {
     const elapsedTime = Date.now() - startTime;
-    if (isInitial || (interval-errMargin <= elapsedTime && elapsedTime <= interval+errMargin)) {
+    if (isInitial || (interval-errMargin <= elapsedTime)) {
         startTime = Date.now();
 
         timerData['repeat'] = repeatChb.checked;
@@ -106,12 +106,14 @@ function step(isInitial) {
         const idx = timerData['currentIndex'];
         const secLeft = timerData['secLeft'];
         const nextSecLeft = secLeft-1;
+        console.log("elapsedTime: " + elapsedTime + " ms, secLeft: " + secLeft);
 
         let timeStr = convertHMS(secLeft);
         displayStatus(timeStr);
         colorSelection(-1);
 
         if (secLeft == 0) {
+            console.log("RING");
             // timer finished
             playSound();
             let totalTimeStr = convertHMS(timers[idx].value);
