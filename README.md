@@ -1,6 +1,6 @@
 # Online Alarm
 
-Can be accessed at https://hjoonpark.github.io/OnlineAlarm/.
+Can be accessed at https://hjoonpark.github.io/online-alarm/.
 
 The issue is that if a web browser is hidden for several minutes, the timer gets paused by the browser - Chrome, Firefox.
 
